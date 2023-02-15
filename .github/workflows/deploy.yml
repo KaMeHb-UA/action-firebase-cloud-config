@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: repository
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: cd repository && yarn install --frozen-lockfile
+      - name: Build
+        run: |
+          cd repository
+          yarn build
+          mv dist ../action
+          mv .git ../.git
+          cp action.yml ../
+          cd ..
+          rm -rf repository
+      - name: Push to remote
+        env:
+          RELEASE: ${{ github.event.release.tag_name }}
+          BRANCH: release-${{ github.event.release.tag_name }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout --orphan "${BRANCH}"
+          git add .
+          git commit -m "Autobuild for ${RELEASE}"
+          git push --force origin "${BRANCH}"
+          git tag -f -a "${RELEASE}" -m "Autobuild for ${RELEASE}"
+          git push -f --tags
+          git push origin -d "${BRANCH}"

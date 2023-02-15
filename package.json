@@ -1,0 +1,15 @@
+{
+	"name": "action-firebase-cloud-config",
+	"scripts": {
+		"build": "tsup"
+	},
+	"dependencies": {
+		"@actions/core": "^1.10.0",
+		"js-yaml": "^4.1.0"
+	},
+	"devDependencies": {
+		"@types/js-yaml": "^4.0.5",
+		"@types/node": "^18.13.0",
+		"tsup": "^6.6.3"
+	}
+}
