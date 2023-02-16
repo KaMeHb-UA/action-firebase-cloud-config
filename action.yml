@@ -1,0 +1,14 @@
+name: Firebase Cloud Config
+description: Gets, sets or updates specified values in Firebase Cloud Config
+
+runs:
+  using: node16
+  main: action/index.js
+
+inputs:
+  mode:
+    description: Mode of deployment process. Should be "set", "update" or "get"
+    required: true
+  config:
+    description: The config itself
+    required: true
